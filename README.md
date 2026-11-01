@@ -35,3 +35,10 @@ The trade-off: there is no built-in holiday calendar. Public holidays are surfac
 - `is_open` treats the close time as not open (half-open interval: `open <= now < close`).
 - The clock function must return `YYYY-MM-DDTHH:MM`; `is_open` parses on the `T` separator.
 - Half-day sessions carry `session_type=SessionType.HALF_DAY` and their `close_time` reflects the early close, so afternoon checks via `is_open` return False automatically.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
